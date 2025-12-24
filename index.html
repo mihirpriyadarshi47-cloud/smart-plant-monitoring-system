@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,14 +20,32 @@
         canvas {
             image-rendering: pixelated;
         }
+        /* Custom scrollbar for a techy look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
     </style>
 
     <script>
-      // Mock process.env for browser environments
-      // On Netlify, environment variables are typically injected during build.
-      // This ensures the application can safely reference process.env.API_KEY.
+      // Initialize process.env for browser compatibility
       window.process = window.process || { env: {} };
-      // Note: In a production build, these would be replaced by actual values.
+      
+      /**
+       * This placeholder __API_KEY_PLACEHOLDER__ is automatically replaced 
+       * by the Netlify build command defined in netlify.toml.
+       * Make sure to set the API_KEY environment variable in your Netlify site settings.
+       */
+      window.process.env.API_KEY = "__API_KEY_PLACEHOLDER__";
     </script>
 
 <script type="importmap">

@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import { ShieldCheck, AlertTriangle, Play, Loader2, Code, Lock } from 'lucide-react';
+import { ShieldCheck, AlertTriangle, Play, Loader2, Code, Lock, Key } from 'lucide-react';
 
 const SOURCE_CODE = `// ESP32 Smart Plant Source Code Analysis Target
 #include <WiFi.h>
@@ -37,11 +36,20 @@ void loop() {
 const SecurityAuditor: React.FC = () => {
   const [audit, setAudit] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const runAudit = async () => {
+    // Basic check for Netlify environment variable injection
+    const apiKey = process.env.API_KEY;
+    if (!apiKey || apiKey === "__API_KEY_PLACEHOLDER__" || apiKey === "undefined") {
+      setError("API Key not found. Please set 'API_KEY' in your Netlify Environment Variables.");
+      return;
+    }
+
     setLoading(true);
+    setError(null);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: 'gemini-3-pro-preview',
         contents: `Analyze this ESP32 C++ code for safety and security: ${SOURCE_CODE}. 
@@ -53,7 +61,7 @@ const SecurityAuditor: React.FC = () => {
       });
       setAudit(response.text || "Audit failed to generate.");
     } catch (err) {
-      setAudit("Error: " + (err as Error).message);
+      setError("AI Analysis Error: " + (err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -81,6 +89,13 @@ const SecurityAuditor: React.FC = () => {
             {loading ? 'Analysing...' : 'Run Audit'}
           </button>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400 text-xs">
+            <Key size={14} className="shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
 
         {!audit && !loading && (
           <div className="flex flex-col items-center justify-center py-10 text-slate-700 border-2 border-dashed border-slate-800 rounded-xl">
