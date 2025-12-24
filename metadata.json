@@ -1,0 +1,7 @@
+{
+  "name": "Smart Plant Simulation Environment",
+  "description": "A high-fidelity hardware simulator for the ESP32 Smart Plant Monitoring System, featuring a virtual OLED display, interactive sensor controls, and a functional replica of the system's web dashboard.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
