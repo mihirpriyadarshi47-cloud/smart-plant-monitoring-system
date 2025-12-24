@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { SystemState } from '../types';
-import { ShieldAlert, ShieldCheck } from 'lucide-react';
+import { ShieldAlert, Globe, Server } from 'lucide-react';
 
 interface Props {
   state: SystemState;
@@ -18,6 +17,8 @@ const WebDashboard: React.FC<Props> = ({ state, onTogglePump, onToggleMode }) =>
 
   const gaugeColor = state.moisture < 20 ? "#ff1744" : state.moisture > 80 ? "#2979ff" : "#00e676";
 
+  const isDeployed = !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1');
+
   return (
     <div className="w-full h-full bg-[#222] overflow-hidden flex flex-col relative font-sans">
       <div 
@@ -27,7 +28,14 @@ const WebDashboard: React.FC<Props> = ({ state, onTogglePump, onToggleMode }) =>
       <div className="absolute inset-0 bg-black/60 pointer-events-none" />
 
       <div className="relative z-10 px-4 pt-6 pb-2">
-        <h1 className="text-[#00e676] text-xl font-bold font-['Orbitron']">Smart Plant Monitoring System</h1>
+        <div className="flex justify-between items-start">
+          <h1 className="text-[#00e676] text-xl font-bold font-['Orbitron']">Smart Plant Monitoring System</h1>
+          {isDeployed && (
+            <div className="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-md flex items-center gap-1 text-[10px] font-bold border border-emerald-500/30">
+              <Globe size={10} /> LIVE
+            </div>
+          )}
+        </div>
         <div className="flex justify-between items-center mt-1">
           <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">LIVE DASHBOARD</span>
           <div className="flex gap-2">
